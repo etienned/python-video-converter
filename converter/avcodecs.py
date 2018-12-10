@@ -353,15 +353,11 @@ class VideoCodec(BaseCodec):
             w = safe['max_width']
             if w < 16 or w > 4000:
                 w = None
-            elif w % 2:
-                w += 1
 
         if 'max_height' in safe:
             h = safe['max_height']
             if h < 16 or h > 3000:
                 h = None
-            elif h % 2:
-                h += 1
 
         crop_width, crop_height = None, None
 
@@ -369,7 +365,7 @@ class VideoCodec(BaseCodec):
             try:
                 crop_width, crop_height, _, _ = safe['crop'].split(':')
                 crop_width, crop_height = int(crop_width), int(crop_height)
-            except:
+            except Exception:
                 del safe['crop']
             else:
                 if crop_width < 16 or crop_width > 3000:
