@@ -1078,7 +1078,13 @@ def parse_crop(data, size, fps):
     # Get all the only positive crop values.
     matches = re.findall('crop=(\d{1,4}):(\d{1,4}):(\d{1,3}):(\d{1,3})', data)
     if not matches:
-        raise FFMpegConvertError('No crop data.', data)
+        # Check for negative crop values.
+        match = re.search('crop=-?\d{1,4}:-?\d{1,4}:-?\d{1,4}:-?\d{1,4}', data)
+        if match:
+            # Don't crop at all because negative values means a lot of black.
+            return '{0}:{1}:0:0'.format(width, height)
+        else:
+            raise FFMpegConvertError('No crop data.', '', data)
 
     # For each crop values, get or calculate the left, right, top and bottom
     # values.
